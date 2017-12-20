@@ -28,7 +28,7 @@
 Name:    %{?scl_prefix}php-ioncube10
 Vendor:  cPanel, Inc.
 Summary: Experimental v10 Loader for ionCube-encoded PHP files
-Version: 10.0.3
+Version: 10.1.0
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
 %define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
@@ -49,7 +49,7 @@ Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
 Provides:      %{?scl_prefix}ioncube = 10
 Conflicts:     %{?scl_prefix}ioncube >= 11, %{?scl_prefix}ioncube < 10
-Conflicts:     %{?scl_prefix}php-ioncube 
+Conflicts:     %{?scl_prefix}php-ioncube
 Conflicts:     %{?scl_prefix}php-ioncube5
 Conflicts:     %{?scl_prefix}php-ioncube6
 
@@ -91,6 +91,12 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Tue Dec 19 2017 Cory McIntire <cory@cpanel.net> - 10.1.0-2
+- EA-7026: Add IonCube 10 support for PHP 7.2
+
+* Thu Dec 14 2017 Cory McIntire <cory@cpanel.net> - 10.1.0-1
+- EA-7024: Update from 10.0.3 to 10.1.0
+
 * Thu Oct 12 2017 Dan Muey <dan@cpanel.net> - 10.0.3-2
 - EA-6734: add 5.4, 5.5, 5.6, and 7.0 packages (7.2 support is still beta ATM)
 
