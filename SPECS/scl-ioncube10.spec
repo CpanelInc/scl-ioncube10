@@ -27,10 +27,10 @@
 
 Name:    %{?scl_prefix}php-ioncube10
 Vendor:  cPanel, Inc.
-Summary: Experimental v10 Loader for ionCube-encoded PHP files
+Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.2.0
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -58,7 +58,7 @@ Conflicts:     %{?scl_prefix}php-ioncube6
 %{?filter_setup}
 
 %description
-The experimental v10 ionCube Loader enables use of ionCube-encoded PHP files running
+The v10 ionCube Loader enables use of ionCube-encoded PHP files running
 under PHP %{php_version}.
 
 %prep
@@ -77,7 +77,7 @@ install -m 755 ioncube_loader_lin_%{php_version}.so $RPM_BUILD_ROOT%{php_extdir}
 # The ini snippet
 install -d -m 755 $RPM_BUILD_ROOT%{php_inidir}
 cat > $RPM_BUILD_ROOT%{php_inidir}/%{inifile} <<EOF
-; Enable Experimental v10 IonCube Loader extension module
+; Enable v10 IonCube Loader extension module
 zend_extension="%{php_extdir}/ioncube_loader_lin_%{php_version}.so"
 EOF
 
@@ -91,6 +91,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Wed Apr 25 2018 Daniel Muey <dan@cpanel.net> - 10.2.0-2
+- EA-7374: Remove Experimental verbiage from verbiage
+
 * Mon Apr 02 2018 Cory McIntire <cory@cpanel.net> - 10.2.0-1
 - EA-7313: Update from 10.1.1 to 10.2.0
 
