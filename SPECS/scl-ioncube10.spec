@@ -28,9 +28,9 @@
 Name:    %{?scl_prefix}php-ioncube10
 Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
-Version: 10.2.0
+Version: 10.2.2
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 2
+%define release_prefix 1
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -91,6 +91,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Fri Jul 06 2018 Tim Mullin <tim@cpanel.net> - 10.2.2-1
+- EA-7609: Update from 10.2.0 to 10.2.2
+
 * Wed Apr 25 2018 Daniel Muey <dan@cpanel.net> - 10.2.0-2
 - EA-7374: Remove Experimental verbiage from verbiage
 
