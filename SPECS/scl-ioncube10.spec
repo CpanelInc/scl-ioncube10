@@ -30,7 +30,7 @@ Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.3.2
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -91,6 +91,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Thu Feb 14 2019 Cory McIntire <cory@cpanel.net> - 10.3.2-2
+- EA-8203: Add IonCube 10 support for PHP 7.3
+
 * Thu Feb 07 2019 Cory McIntire <cory@cpanel.net> - 10.3.2-1
 - EA-8106: Update from 10.2.4 to 10.3.2
 
