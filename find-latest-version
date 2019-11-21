@@ -5,7 +5,7 @@
 # This code is subject to the cPanel license. Unauthorized copying is prohibited
 #
 # This provides incremental updates to existing packages in EasyApache4.
-package ea_apache2::find_latest_version;
+package ea_ioncube10::find_latest_version;
 
 use strict;
 use warnings;
@@ -46,8 +46,12 @@ my $anchor;
 my $scraped_version;
 my $scraped_tarball;
 
+use constant max_depth => 30;
+
 sub _recursive_descent {
     my ( $node, $depth, $parent ) = @_;
+
+    die "Recursion limit reached, have they changed the landing page?\n" if ($depth > max_depth);
 
     # If $node is a reference, then it is an HTML::Element.
 
@@ -145,6 +149,9 @@ sub _add_sum {
     my ( $http, $hr ) = @_;
 
     # unfortunately, ioncube does not provide any way to validate the tarball
+    warn ("Ioncube does not provide checksum data, you will need to manually validate the tarball\n");
 
     return 1;
 }
+
+1;
