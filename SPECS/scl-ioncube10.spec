@@ -30,7 +30,7 @@ Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.3.9
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -47,6 +47,7 @@ BuildRequires: %{?scl_prefix}build
 BuildRequires: %{?scl_prefix}php-devel
 Requires:      %{?scl_prefix}php(zend-abi) = %{php_zend_api}
 Requires:      %{?scl_prefix}php(api) = %{php_core_api}
+Requires:      %{?scl_prefix}php-cli
 Provides:      %{?scl_prefix}ioncube = 10
 Conflicts:     %{?scl_prefix}ioncube >= 11, %{?scl_prefix}ioncube < 10
 Conflicts:     %{?scl_prefix}php-ioncube
@@ -91,6 +92,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Tue Feb 18 2020 Tim Mullin <tim@cpanel.net> - 10.3.9-2
+- EA-8865: Add php-cli as a dependency
+
 * Wed Oct 16 2019 Tim Mullin <tim@cpanel.net> - 10.3.9-1
 - EA-8703: Update from 10.3.8 to 10.3.9
 
