@@ -28,7 +28,7 @@ ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum ) if !caller();
 #
 #       tr
 #        td
-#         Linux (64 bits)   
+#         Linux (64 bits)
 #         a HREF https://ioncube24.com
 #          img
 #        td
@@ -43,15 +43,13 @@ ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum ) if !caller();
 #          2019-10-11
 
 my $anchor;
-my $scraped_version;
-my $scraped_tarball;
 
 use constant max_depth => 30;
 
 sub _recursive_descent {
-    my ( $node, $depth, $parent ) = @_;
+    my ( $type, $node, $depth, $parent ) = @_;
 
-    die "Recursion limit reached, have they changed the landing page?\n" if ($depth > max_depth);
+    die "Recursion limit reached, have they changed the landing page?\n" if ( $depth > max_depth );
 
     # If $node is a reference, then it is an HTML::Element.
 
@@ -62,7 +60,7 @@ sub _recursive_descent {
 
         my @children = $node->content_list();
         for my $child_node (@children) {
-            _recursive_descent( $child_node, $depth + 1, $node );
+            _recursive_descent( $type, $child_node, $depth + 1, $node );
         }
     }
     else {
@@ -70,7 +68,7 @@ sub _recursive_descent {
         # If $node is not a reference, then it is just a piece of text
         # from the HTML file.
 
-        if ( !$anchor && $node =~ m/\QLinux (64 bits)\E/ ) {
+        if ( !$anchor && $node =~ m/\Q$type\E/ ) {
             $anchor = $parent;
         }
     }
@@ -79,13 +77,13 @@ sub _recursive_descent {
 }
 
 sub _scrape_page {
-    my ($html) = @_;
+    my ( $type, $html ) = @_;
 
     my $treebuilder = HTML::TreeBuilder->new_from_content($html);
     my $root        = $treebuilder->elementify();
 
     undef $anchor;
-    _recursive_descent( $root, 0, undef );
+    _recursive_descent( $type, $root, 0, undef );
 
     if ( !defined $anchor ) {
         die "Unable to identify the x86-64 version of ioncube, perhaps they have changed their landing page?\n";
@@ -96,8 +94,8 @@ sub _scrape_page {
 
     my $tr = $anchor->parent();
 
-    undef $scraped_version;
-    undef $scraped_tarball;
+    my $scraped_version;
+    my $scraped_tarball;
 
     my @children = $tr->content_list();
     for my $child_node (@children) {
@@ -122,7 +120,7 @@ sub _scrape_page {
         die "Could not find version and/or the tarball, perhaps they changed the format of the landing page?\n";
     }
 
-    return;
+    return ( $scraped_version, $scraped_tarball );
 }
 
 sub _get_required {
@@ -134,22 +132,34 @@ sub _get_required {
         die "Could not GET apache dist page ($res->{status} $res->{reason})\n";
     }
 
-    _scrape_page( $res->{content} );
+    my ( $scraped_version, $scraped_tarball ) = _scrape_page( 'Linux (64 bits)', $res->{content} );
+    my ( $aux_version,     $aux_tarball )     = _scrape_page( 'Linux (32 bits)', $res->{content} );
 
     my $version = $scraped_version;
     my $url     = $scraped_tarball;
     my $ridx    = rindex( $scraped_tarball, '/' );
-    die "Unable to determine the tarball name\n" if ( $ridx < 0 );
+    die "Unable to determine the tarball name from $scraped_tarball\n" if ( $ridx < 0 );
     my $name = substr( $scraped_tarball, $ridx + 1 );
 
-    return ( $version, $url, $name );
+    $ridx = rindex( $aux_tarball, '/' );
+    die "Unable to determine the tarball name from $aux_tarball\n" if ( $ridx < 0 );
+    my $aux_name = substr( $aux_tarball, $ridx + 1 );
+
+    my $other = {
+        aux_tarball => {
+            name => $aux_name,
+            url  => $aux_tarball,
+        },
+    };
+
+    return ( $version, $url, $name, $other );
 }
 
 sub _add_sum {
     my ( $http, $hr ) = @_;
 
     # unfortunately, ioncube does not provide any way to validate the tarball
-    warn ("Ioncube does not provide checksum data, you will need to manually validate the tarball\n");
+    warn("Ioncube does not provide checksum data, you will need to manually validate the tarball\n");
 
     return 1;
 }
