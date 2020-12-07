@@ -21,7 +21,38 @@ ea4_tool::util::find_latest_version( \&_get_required, \&_add_sum ) if !caller();
 #### helpers ##
 ###############
 
-#
+sub _get_required {
+    my ($http) = @_;
+
+    my $listing_url = "https://ioncube.com/loaders.php";
+    my $res         = $http->get($listing_url);
+    if ( !$res->{success} ) {
+        die "Could not GET apache dist page ($res->{status} $res->{reason})\n";
+    }
+
+    my ( $version, $url ) = _scrape_page( 'Linux (64 bits)', $res->{content} );
+
+    my $ridx = rindex( $url, '/' );
+    die "Unable to determine the tarball name from “$url”\n" if ( $ridx < 0 );
+    my $name = substr( $url, $ridx + 1 );
+
+    return ( $version, $url, $name );
+}
+
+sub _add_sum {
+    my ( $http, $hr ) = @_;
+
+    # Optional: Set $hr->{tarball}{sum}{hex} and $hr->{tarball}{sum}{type} (sha256, sha1, md5, anythign Digest.pm can handle)
+    #           die if there is a problem determining either of those values
+    # otherwise this is a no-op
+
+    return;
+}
+
+##########################
+#### helper helpers lol ##
+##########################
+
 # The landing page for ioncube is structured like so.   I am anchoring on the
 # Linux (64 bits) string, from there I can go up and around for the href and
 # the version number 10.3.9.
@@ -123,45 +154,21 @@ sub _scrape_page {
     return ( $scraped_version, $scraped_tarball );
 }
 
-sub _get_required {
-    my ($http) = @_;
-
-    my $listing_url = "https://ioncube.com/loaders.php";
-    my $res         = $http->get($listing_url);
-    if ( !$res->{success} ) {
-        die "Could not GET apache dist page ($res->{status} $res->{reason})\n";
-    }
-
-    my ( $scraped_version, $scraped_tarball ) = _scrape_page( 'Linux (64 bits)', $res->{content} );
-    my ( $aux_version,     $aux_tarball )     = _scrape_page( 'Linux (32 bits)', $res->{content} );
-
-    my $version = $scraped_version;
-    my $url     = $scraped_tarball;
-    my $ridx    = rindex( $scraped_tarball, '/' );
-    die "Unable to determine the tarball name from $scraped_tarball\n" if ( $ridx < 0 );
-    my $name = substr( $scraped_tarball, $ridx + 1 );
-
-    $ridx = rindex( $aux_tarball, '/' );
-    die "Unable to determine the tarball name from $aux_tarball\n" if ( $ridx < 0 );
-    my $aux_name = substr( $aux_tarball, $ridx + 1 );
-
-    my $other = {
-        aux_tarball => {
-            name => $aux_name,
-            url  => $aux_tarball,
-        },
-    };
-
-    return ( $version, $url, $name, $other );
-}
-
-sub _add_sum {
-    my ( $http, $hr ) = @_;
-
-    # unfortunately, ioncube does not provide any way to validate the tarball
-    warn("Ioncube does not provide checksum data, you will need to manually validate the tarball\n");
-
-    return 1;
-}
-
 1;
+
+__END__
+
+=encoding utf-8
+
+=head1 README
+
+The tarball does not contain the version in its name.
+
+There is a different distribution archive per architecture:
+
+OBS builds the 32-bit targets as arch 'i586', and more typical
+32-bit architecture is 'i386', but 32-bit archive is named 'x86'.
+64-bit archive is 'x86-64', rather than 'x86_64'.
+
+We only do 64 bit.
+

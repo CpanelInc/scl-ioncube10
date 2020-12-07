@@ -10,19 +10,6 @@
 # This makes the ea-php<ver>-build macro stuff work
 %scl_package_override
 
-# OBS builds the 32-bit targets as arch 'i586', and more typical
-# 32-bit architecture is 'i386', but 32-bit archive is named 'x86'.
-# 64-bit archive is 'x86-64', rather than 'x86_64'.
-%if "%{_arch}" == "i586" || "%{_arch}" == "i386"
-%global archive_arch x86
-%else
-%if "%{_arch}" == "x86_64"
-%global archive_arch x86-64
-%else
-%global archive_arch %{_arch}
-%endif
-%endif
-
 %global inifile 01-ioncube.ini
 
 Name:    %{?scl_prefix}php-ioncube10
@@ -30,16 +17,16 @@ Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.4.5
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 1
+%define release_prefix 2
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
 URL:     http://www.ioncube.com/loaders.php
 
-# There is a different distribution archive per architecture.  The
-# archive contains the license file, so no need to have it as a
-# separate source file.
-Source: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_%{archive_arch}.tar.gz
+# 1. See `perldoc find-latest-version` for info on the tarball.
+# 2. The archive contains the license file, so no need to have it as a
+#    separate source file.
+Source: http://downloads3.ioncube.com/loader_downloads/ioncube_loaders_lin_x86-64.tar.gz
 
 BuildRequires: scl-utils-build
 BuildRequires: %{?scl_prefix}scldevel
@@ -92,6 +79,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Thu Dec 03 2020 Daniel Muey <dan@cpanel.net> - 10.4.5-2
+- ZC-7975: Drop 32-bit tar ball
+
 * Sun Nov 29 2020 Cory McIntire <cory@cpanel.net> - 10.4.5-1
 - EA-9450: Update scl-ioncube10 from v10.4.4 to v10.4.5
 
