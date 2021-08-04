@@ -28,6 +28,7 @@
         "ea-php73-php-ioncube10": [
             "ea-php73-php"
         ]
-    }
+    },
+    "dont_override_config": 1
 }
 
