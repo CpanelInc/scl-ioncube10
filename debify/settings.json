@@ -15,20 +15,14 @@
         "ea-php74-php(api)",
         "ea-php73-php(api)",
         "ea-php74-php(zend-abi)",
-        "ea-php73-php(zend-abi)"
+        "ea-php73-php(zend-abi)",
+        "ea-php74-php",
+        "ea-php73-php"
     ],
     "add_to_build_requires": [
         "ea-php74-php-devel",
         "ea-php73-php-devel"
     ],
-    "add_to_requires": {
-        "ea-php74-php-ioncube10": [
-            "ea-php74-php"
-        ],
-        "ea-php73-php-ioncube10": [
-            "ea-php73-php"
-        ]
-    },
     "dont_override_config": 1
 }
 

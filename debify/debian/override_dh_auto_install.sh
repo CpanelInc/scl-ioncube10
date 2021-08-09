@@ -20,7 +20,7 @@ echo "FILE :$file:"
 
 cat > $file <<EOF
 ; Enable v10 IonCube Loader extension module
-zend_extension="${php_extdir}/ioncube_loader_lin_${php_version}.so"
+zend_extension="${php_extdir}ioncube_loader_lin_${php_version}.so"
 EOF
 
 mkdir -p ${DEB_INSTALL_ROOT}/opt/cpanel/$scl/root/usr/share/doc/${full_package_name}
