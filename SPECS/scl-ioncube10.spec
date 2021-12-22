@@ -17,7 +17,7 @@ Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.4.5
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 2
+%define release_prefix 3
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -79,6 +79,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Wed Dec 22 2021 Julian Brown <julian.brown@cpanel.net> - 10.4.5-3
+- ZC-9608: Fix build dependency for Ubuntu 21
+
 * Thu Dec 03 2020 Daniel Muey <dan@cpanel.net> - 10.4.5-2
 - ZC-7975: Drop 32-bit tar ball
 
