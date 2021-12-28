@@ -20,10 +20,6 @@
         "ea-php74-php",
         "ea-php73-php"
     ],
-    "add_to_build_requires": [
-        "ea-php74-php-devel",
-        "ea-php73-php-devel"
-    ],
     "dont_override_config": 1
 }
 
