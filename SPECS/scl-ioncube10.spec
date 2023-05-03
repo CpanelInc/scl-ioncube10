@@ -1,4 +1,4 @@
-%define debug_package %{nil}
+%global _missing_build_ids_terminate_build 0
 
 # Package namespaces
 %global ns_name ea
@@ -17,7 +17,7 @@ Vendor:  cPanel, Inc.
 Summary: v10 Loader for ionCube-encoded PHP files
 Version: 10.4.5
 # Doing release_prefix this way for Release allows for OBS-proof versioning, See EA-4572 for more details
-%define release_prefix 5
+%define release_prefix 6
 Release: %{release_prefix}%{?dist}.cpanel
 License: Redistributable
 Group:   Development/Languages
@@ -79,6 +79,9 @@ EOF
 %{php_extdir}/ioncube_loader_lin_%{php_version}.so
 
 %changelog
+* Tue Apr 04 2023 Julian Brown <julian.brown@cpanel.net> - 10.4.5-6
+- ZC-10047: Do not build on Ubuntu 22
+
 * Mon Aug 15 2022 Julian Brown <julian.brown@cpanel.net> - 10.4.5-5
 - ZC-10221: ioncube dropped support for 10, remove find-latest-version
 
